@@ -3,17 +3,25 @@ package br.com.alura.helloapp.navigation
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import br.com.alura.helloapp.DestinosHelloApp
+import br.com.alura.helloapp.preferences.PreferencesKey.SENHA
+import br.com.alura.helloapp.preferences.PreferencesKey.USUARIO
+import br.com.alura.helloapp.preferences.dataStore
 import br.com.alura.helloapp.ui.login.FormularioLoginTela
 import br.com.alura.helloapp.ui.login.FormularioLoginViewModel
 import br.com.alura.helloapp.ui.login.LoginTela
 import br.com.alura.helloapp.ui.login.LoginViewModel
 import br.com.alura.helloapp.ui.navegaLimpo
+import kotlinx.coroutines.launch
 
 fun NavGraphBuilder.loginGraph(
     navController: NavHostController
@@ -34,15 +42,20 @@ fun NavGraphBuilder.loginGraph(
                 }
             }
 
+            val coroutineScope = rememberCoroutineScope()
+
             LoginTela(
                 state = state,
                 onClickLogar = {
-                    viewModel.tentaLogar()
+                    coroutineScope.launch {
+                        viewModel.tentaLogar()
+                    }
                 },
                 onClickCriarLogin = {
                     navController.navigate(DestinosHelloApp.FormularioLogin.rota)
                 }
             )
+
         }
 
         composable(
@@ -51,9 +64,14 @@ fun NavGraphBuilder.loginGraph(
             val viewModel = hiltViewModel<FormularioLoginViewModel>()
             val state by viewModel.uiState.collectAsState()
 
+            val coroutineScope = rememberCoroutineScope()
+
             FormularioLoginTela(
                 state = state,
                 onSalvar = {
+                    coroutineScope.launch {
+                        viewModel.registraLogin()
+                    }
                     navController.navegaLimpo(DestinosHelloApp.Login.rota)
                 }
             )
