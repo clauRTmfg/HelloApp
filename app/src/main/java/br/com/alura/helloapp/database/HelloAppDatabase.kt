@@ -4,11 +4,10 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import br.com.alura.helloapp.data.Contato
-import br.com.alura.helloapp.database.converters.Converters
+import br.com.alura.helloapp.database.converters.*
 
 @Database(entities = [Contato::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class HelloAppDatabase : RoomDatabase() {
     abstract fun contatoDao(): ContatoDao
-
 }

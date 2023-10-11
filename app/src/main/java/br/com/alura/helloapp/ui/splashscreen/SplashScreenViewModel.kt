@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class SplashScreenViewModel @Inject constructor(
@@ -24,21 +25,22 @@ class SplashScreenViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            defineDestinoInicial()
+            definiDestinoInicial()
         }
     }
 
-    private suspend fun defineDestinoInicial() {
-        // delay apenas para visualizarmos a SplashScreen
-        delay(2000)
+    private suspend fun definiDestinoInicial() {
+        delay(Random.nextLong(300, 1000))
         dataStore.data.collect {
             val appState = if (it[LOGADO] == true) {
                 AppState.Logado
             } else {
                 AppState.Deslogado
             }
-            _uiState.value = _uiState.value.copy( appState = appState)
-        }
 
+            _uiState.value = _uiState.value.copy(
+                appState = appState
+            )
+        }
     }
 }

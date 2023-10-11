@@ -1,5 +1,7 @@
 package br.com.alura.helloapp.ui.form
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,11 +19,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class FormularioContatoViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val contatoDao: ContatoDao
+    private val contatoDao: ContatoDao,
+    private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
 
     private val idContato = savedStateHandle.get<Long>(ID_CONTATO)
@@ -29,7 +31,6 @@ class FormularioContatoViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(FormularioContatoUiState())
     val uiState: StateFlow<FormularioContatoUiState>
         get() = _uiState.asStateFlow()
-
 
     init {
         viewModelScope.launch {
@@ -71,7 +72,7 @@ class FormularioContatoViewModel @Inject constructor(
 
     private suspend fun carregaContato() {
         idContato?.let {
-            val contato = contatoDao.buscaPorId(it)
+            val contato = contatoDao.buscaPorId(idContato)
             contato.collect {
                 it?.let {
                     with(it) {
@@ -79,10 +80,10 @@ class FormularioContatoViewModel @Inject constructor(
                             id = id,
                             nome = nome,
                             sobrenome = sobrenome,
+                            aniversario = aniversario,
                             telefone = telefone,
                             fotoPerfil = fotoPerfil,
-                            aniversario = aniversario,
-                            tituloAppbar = R.string.titulo_editar_contato
+                            tituloAppbar = R.string.titulo_editar_contato,
                         )
                     }
                 }
@@ -104,7 +105,7 @@ class FormularioContatoViewModel @Inject constructor(
         )
     }
 
-    suspend fun salvar() {
+    suspend fun salva() {
         with(_uiState.value) {
             contatoDao.insere(
                 Contato(

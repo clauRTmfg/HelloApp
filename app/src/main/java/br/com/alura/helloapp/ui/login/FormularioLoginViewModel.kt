@@ -38,16 +38,17 @@ class FormularioLoginViewModel @Inject constructor(
                     _uiState.value = _uiState.value.copy(
                         senha = it
                     )
-                },
+                }
             )
         }
     }
 
-    suspend fun registraLogin() {
+    suspend fun salvaLogin() {
         dataStore.edit { preferences ->
-            preferences[PreferencesKey.USUARIO] = _uiState.value.usuario
-            preferences[PreferencesKey.SENHA] = _uiState.value.senha
+            preferences[PreferencesKey.USUARIO] =
+                _uiState.value.usuario
+            preferences[PreferencesKey.SENHA] =
+                _uiState.value.senha
         }
     }
-
 }

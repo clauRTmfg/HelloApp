@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class DetalhesContatoViewlModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
@@ -33,7 +32,7 @@ class DetalhesContatoViewlModel @Inject constructor(
 
     private suspend fun carregaContato() {
         idContato?.let {
-            val contato = contatoDao.buscaPorId(it)
+            val contato = contatoDao.buscaPorId(idContato)
             contato.collect {
                 it?.let {
                     with(it) {
@@ -41,9 +40,9 @@ class DetalhesContatoViewlModel @Inject constructor(
                             id = id,
                             nome = nome,
                             sobrenome = sobrenome,
+                            aniversario = aniversario,
                             telefone = telefone,
-                            fotoPerfil = fotoPerfil,
-                            aniversario = aniversario
+                            fotoPerfil = fotoPerfil
                         )
                     }
                 }
@@ -52,6 +51,6 @@ class DetalhesContatoViewlModel @Inject constructor(
     }
 
     suspend fun removeContato() {
-        idContato?.let { contatoDao.remove(it) }
+        idContato?.let { contatoDao.deleta(it) }
     }
 }

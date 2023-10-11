@@ -1,4 +1,4 @@
-package br.com.alura.helloapp.di.modules
+package br.com.alura.helloapp.di.module
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -15,7 +15,7 @@ import dagger.hilt.components.SingletonComponent
 class DataStoreModule {
 
     @Provides
-    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
+    fun provideDatStore(@ApplicationContext context: Context): DataStore<Preferences> {
         return context.dataStore
     }
 }

@@ -25,11 +25,15 @@ class ListaContatosViewModel @Inject constructor(
         get() = _uiState.asStateFlow()
 
     init {
+        buscaContatos()
+    }
+
+    private fun buscaContatos() {
         viewModelScope.launch {
             val contatos = contatoDao.buscaTodos()
-            contatos.collect {
+            contatos.collect { contatosBuscados ->
                 _uiState.value = _uiState.value.copy(
-                    contatos = it
+                    contatos = contatosBuscados
                 )
             }
         }
@@ -40,5 +44,4 @@ class ListaContatosViewModel @Inject constructor(
             preferences[booleanPreferencesKey("logado")] = false
         }
     }
-
 }

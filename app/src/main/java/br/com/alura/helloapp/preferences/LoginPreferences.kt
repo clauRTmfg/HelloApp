@@ -7,7 +7,6 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 
-
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "login")
 
 object PreferencesKey {

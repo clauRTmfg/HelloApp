@@ -5,22 +5,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import br.com.alura.helloapp.FormularioContato
 import br.com.alura.helloapp.R
-import br.com.alura.helloapp.data.Contato
-import br.com.alura.helloapp.database.HelloAppDatabase
 import br.com.alura.helloapp.ui.form.FormularioContatoTela
 import br.com.alura.helloapp.ui.form.FormularioContatoViewModel
 import br.com.alura.helloapp.util.ID_CONTATO
 import kotlinx.coroutines.launch
 
 fun NavGraphBuilder.formularioContatoGraph(
-    navController: NavHostController
+    onVolta: () -> Unit
 ) {
     composable(
         route = FormularioContato.rotaComArgumentos,
@@ -28,8 +23,7 @@ fun NavGraphBuilder.formularioContatoGraph(
     ) { navBackStackEntry ->
         navBackStackEntry.arguments?.getLong(
             ID_CONTATO
-        )?.let { idContato ->
-
+        )?.let {
             val viewModel = hiltViewModel<FormularioContatoViewModel>()
             val state by viewModel.uiState.collectAsState()
             val context = LocalContext.current
@@ -39,18 +33,17 @@ fun NavGraphBuilder.formularioContatoGraph(
                     context.getString(R.string.aniversario)
                 )
             }
-
             val coroutineScope = rememberCoroutineScope()
 
             FormularioContatoTela(
                 state = state,
-                onClickSalvar = {
+                onClickSalva = {
                     coroutineScope.launch {
-                        viewModel.salvar()
+                        viewModel.salva()
                     }
-                    navController.popBackStack()
+                    onVolta()
                 },
-                onCarregarImagem = {
+                onCarregaImagem = {
                     viewModel.carregaImagem(it)
                 }
             )
