@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import br.com.alura.helloapp.database.ContatoDao
 import br.com.alura.helloapp.database.HelloAppDatabase
+import br.com.alura.helloapp.database.UsuarioDao
+import br.com.alura.helloapp.database.migrations.MIGRATION_1_2
+import br.com.alura.helloapp.database.migrations.MIGRATION_5_6
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,6 +15,7 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 private const val DATABASE_NAME = "helloApp.db"
+
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -24,11 +28,21 @@ class DatabaseModule {
             context,
             HelloAppDatabase::class.java,
             DATABASE_NAME
-        ).build()
+        )
+            // esta é uma opção para alterações na base sem usar migrations, porém
+            // apagando o banco a cada execução
+            //.fallbackToDestructiveMigration()
+            .addMigrations(MIGRATION_1_2, MIGRATION_5_6)
+            .build()
     }
 
     @Provides
     fun provideContatoDao(db: HelloAppDatabase): ContatoDao {
         return db.contatoDao()
+    }
+
+    @Provides
+    fun provideUsuarioDao(db: HelloAppDatabase): UsuarioDao {
+        return db.usuarioDao()
     }
 }

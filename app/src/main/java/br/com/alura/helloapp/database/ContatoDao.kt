@@ -21,4 +21,8 @@ interface ContatoDao {
 
     @Query("DELETE FROM Contato WHERE id = :id")
     suspend fun deleta(id: Long)
+
+    @Query("SELECT * FROM Contato WHERE idUsuario = :usuario")
+    fun buscaTodosPorUsuario(usuario: String): Flow<List<Contato>>
+
 }
